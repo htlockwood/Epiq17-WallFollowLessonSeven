@@ -1,5 +1,5 @@
 //Lesson 7 UltrasonicSensor 2017 Wall Follower
-//New solution robot 7/22/2017 EPIQ
+//New solution robot 7/22/2017 EPIQ / help from Conni
 use Libraries.Robots.Lego.Motor
 use Libraries.Robots.Lego.ColorSensor
 use Libraries.Robots.Lego.Utility
@@ -89,15 +89,18 @@ repeat until touchSensor:IsPressed()//check if to touch sensor is pressed
     motor:RotateForward("C")
 utility:DelayMilliseconds(2) // what number makes works here???
 
-else if ultrasonicSensor:GetDistance() > 0.2
+elseif ultrasonicSensor:GetDistance() > 0.2
     motor:SetSpeed("B",rightspeed-1) 
     motor:SetSpeed("C",leftspeed+1)
     motor:RotateForward("B")
     motor:RotateForward("C")
 utility:DelayMilliseconds(2) // what number makes works here???
-end
-
-    end 
+    else  //then Normal Robot movement, Roll straight head
+    motor:SetSpeed("B",rightspeed)
+    motor:SetSpeed("C",leftspeed)
+    motor:RotateForward("B")
+    motor:RotateForward("C")
+end 
     //if ultrasonicSensor:GetDistance() = 0.3 then Normal Robot movement, Roll straight head
     motor:SetSpeed("B",rightspeed)
     motor:SetSpeed("C",leftspeed)
