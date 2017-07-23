@@ -82,19 +82,19 @@ sound:PlayTone(55, 1000)
 //the delay is now over
 
 repeat until touchSensor:IsPressed()//check if to touch sensor is pressed 
-    if ultrasonicSensor:GetDistance() < 0.3  //have the robot turn right
-    motor:SetSpeed("B",rightspeed-10) 
-    motor:SetSpeed("C",leftspeed)
+    if ultrasonicSensor:GetDistance() < 0.2  //have the robot turn right
+    motor:SetSpeed("B",rightspeed+1) 
+    motor:SetSpeed("C",leftspeed-1)
     motor:RotateForward("B")
     motor:RotateForward("C")
-utility:DelayMilliseconds(10) // what number makes works here???
+utility:DelayMilliseconds(2) // what number makes works here???
 
-else if ultrasonicSensor:GetDistance() > 0.3
-    motor:SetSpeed("B",rightspeed) 
-    motor:SetSpeed("C",leftspeed-10)
+else if ultrasonicSensor:GetDistance() > 0.2
+    motor:SetSpeed("B",rightspeed-1) 
+    motor:SetSpeed("C",leftspeed+1)
     motor:RotateForward("B")
     motor:RotateForward("C")
-utility:DelayMilliseconds(10) // what number makes works here???
+utility:DelayMilliseconds(2) // what number makes works here???
 end
 
     end 
