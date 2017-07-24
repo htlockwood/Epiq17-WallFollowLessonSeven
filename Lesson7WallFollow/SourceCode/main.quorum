@@ -1,111 +1,76 @@
 //Lesson 7 UltrasonicSensor 2017 Wall Follower
-//New solution robot 7/23/2017 EPIQ / help from Conni Now works
+//New solution robot 7/23/2017 EPIQ / help from Conni. Now works and cleaned up.
 use Libraries.Robots.Lego.Motor
-use Libraries.Robots.Lego.ColorSensor
+use Libraries.Robots.Lego.Button
 use Libraries.Robots.Lego.Utility
 use Libraries.Robots.Lego.Screen
 use Libraries.Robots.Lego.Sound
-use Libraries.Robots.Lego.Button
 use Libraries.Robots.Lego.TouchSensor
 use Libraries.Robots.Lego.UltrasonicSensor
-use Libraries.Containers.Array
-use Libraries.Robots.Lego.GyroSensor
-use Libraries.Compute.Math
 
 //instantiate actions
 Motor motor
-ColorSensor colorSensor
+Button button
 Utility utility
 Screen screen
 Sound sound
-Button button
 TouchSensor touchSensor
 UltrasonicSensor ultrasonicSensor
-//GyroSensor gyroSensor
-Math math
+
 //set sensor ports 
-colorSensor:SetPort(1)
 ultrasonicSensor:SetPort(2) 
-//gyroSensor:SetPort(3) //not used
 touchSensor:SetPort(4)
+
 // A few variables
 integer speed=16
 integer leftspeed=speed
 integer rightspeed=speed
-integer volume=33
+integer volume=16
 //output to screen 
-    screen:OutputCenterLarge("WALL7 ", 1)
-    screen:OutputCenter("<-- soft|loud -->", 3)
-    screen:OutputCenter("^-Faster|v-slower", 4)  
-//set button fuctions
-repeat until touchSensor:IsPressed()
+screen:OutputCenterLarge("WALL7 ", 1)
+    
+repeat until touchSensor:IsPressed() //wait till touchsensor is pressed
     sound:SetVolume(volume)     
-    sound:PlayTone(440, 50)
-    sound:SetVolume(33)
-    sound:PlayTone(410, 25) 
+    sound:PlayTone(440, 250)
+    sound:PlayTone(660, 250) 
     button:SetLightPattern(7)
-    if button:IsButtonPressed(button:LEFT_BUTTON)
-        volume=volume-10
-        if volume >100
-            volume=100
-        end //end of if statement
-    elseif button:IsButtonPressed(button:RIGHT_BUTTON)
-        volume=volume+10
-        if volume <1
-            volume=1
-        end
-    elseif button:IsButtonPressed(button:UP_BUTTON)
-        speed =speed*2
-        if speed> 256
-           speed=256
-        end
-    elseif button:IsButtonPressed(button:DOWN_BUTTON)
-            speed =speed/2
-        if speed< 2
-           speed= 2
-        end
-    end //end of if/else statements
-end //end of button fuctions repeat loop
-motor:SetSpeed("B",leftspeed)
-motor:SetSpeed("C",rightspeed)
-
-//delay after user presses center to let go of robot (3 seconds)
+end
+//delay after user presses center to let go of robot (3.5 seconds)
 screen:Clear()
 sound:SetVolume(volume) 
 sound:PlayTone(110, 1000)
 repeat 3 times
-sound:PlayTone(55, 100)
-sound:PlayTone(110, 200)
-sound:PlayTone(55, 100)
+sound:PlayTone(55, 250)
+sound:PlayTone(110, 250)
 end //end of repeat
 sound:PlayTone(55, 1000)
-//the delay is now over
+//the delay is now over. the robot will now listen with the ultrasonic sensor and move foward 
 
 repeat until touchSensor:IsPressed()//check if to touch sensor is pressed 
-number distance = ultrasonicSensor:GetDistance()
+    number distance = ultrasonicSensor:GetDistance()
     motor:SetSpeed("B",rightspeed)
     motor:SetSpeed("C",leftspeed)
     motor:RotateForward("B")
     motor:RotateForward("C")
     if distance < 0.1  //have the robot turn left
-    motor:SetSpeed("B",rightspeed+1) 
-    motor:SetSpeed("C",leftspeed-2)
-    motor:RotateForward("B")
-    motor:RotateForward("C")
-    sound:PlayTone(110, 50)
+        motor:SetSpeed("B",rightspeed+1) 
+        motor:SetSpeed("C",leftspeed-2)
+        motor:RotateForward("B")
+        motor:RotateForward("C")
+        sound:PlayTone(110, 5)
     elseif distance > 0.1 // have the robot move right.
-    motor:SetSpeed("B",rightspeed-1) 
-    motor:SetSpeed("C",leftspeed+1)
-   motor:RotateForward("B")
-   motor:RotateForward("C")
- sound:PlayTone(1760, 50)
+        motor:SetSpeed("B",rightspeed-1) 
+        motor:SetSpeed("C",leftspeed+1)
+        motor:RotateForward("B")
+        motor:RotateForward("C")
+        sound:PlayTone(1760, 5)
     elseif distance = 0.1
-    motor:SetSpeed("B",rightspeed)
-    motor:SetSpeed("C",leftspeed)
-    motor:RotateForward("B")
-    motor:RotateForward("C")
-    sound:PlayTone(440, 400)
-end
+        motor:SetSpeed("B",rightspeed)
+        motor:SetSpeed("C",leftspeed)
+        motor:RotateForward("B")
+        motor:RotateForward("C")
+        sound:PlayTone(440, 40)
+    end
 end
 sound:PlayTone(220, 2000)
 //The End
