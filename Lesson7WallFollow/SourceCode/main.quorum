@@ -1,5 +1,5 @@
 //Lesson 7 UltrasonicSensor 2017 Wall Follower
-//New solution robot 7/23/2017 EPIQ / help from Conni
+//New solution robot 7/23/2017 EPIQ / help from Conni Now works
 use Libraries.Robots.Lego.Motor
 use Libraries.Robots.Lego.ColorSensor
 use Libraries.Robots.Lego.Utility
@@ -29,19 +29,19 @@ ultrasonicSensor:SetPort(2)
 //gyroSensor:SetPort(3) //not used
 touchSensor:SetPort(4)
 // A few variables
-integer speed=32
+integer speed=16
 integer leftspeed=speed
 integer rightspeed=speed
-integer volume=2
+integer volume=33
 //output to screen 
-    screen:OutputCenterLarge("WALL ", 1)
-    screen:OutputCenter("<-- soft|loud -->", 4)
-    screen:OutputCenter("^-Faster|v-slower", 5)  
+    screen:OutputCenterLarge("WALL7 ", 1)
+    screen:OutputCenter("<-- soft|loud -->", 3)
+    screen:OutputCenter("^-Faster|v-slower", 4)  
 //set button fuctions
 repeat until touchSensor:IsPressed()
     sound:SetVolume(volume)     
-    sound:PlayTone(440, 10)
-    sound:SetVolume(10)
+    sound:PlayTone(440, 50)
+    sound:SetVolume(33)
     sound:PlayTone(410, 25) 
     button:SetLightPattern(7)
     if button:IsButtonPressed(button:LEFT_BUTTON)
@@ -82,34 +82,31 @@ sound:PlayTone(55, 1000)
 //the delay is now over
 
 repeat until touchSensor:IsPressed()//check if to touch sensor is pressed 
-    if ultrasonicSensor:GetDistance() < 0.2  //have the robot turn right
-    motor:SetSpeed("B",rightspeed+1) 
-    motor:SetSpeed("C",leftspeed-1)
+number distance = ultrasonicSensor:GetDistance()
+    motor:SetSpeed("B",rightspeed)
+    motor:SetSpeed("C",leftspeed)
     motor:RotateForward("B")
     motor:RotateForward("C")
-utility:DelayMilliseconds(2) // what number makes works here???
-
-elseif ultrasonicSensor:GetDistance() > 0.2
+    if distance < 0.1  //have the robot turn left
+    motor:SetSpeed("B",rightspeed+1) 
+    motor:SetSpeed("C",leftspeed-2)
+    motor:RotateForward("B")
+    motor:RotateForward("C")
+    sound:PlayTone(110, 50)
+    elseif distance > 0.1 // have the robot move right.
     motor:SetSpeed("B",rightspeed-1) 
     motor:SetSpeed("C",leftspeed+1)
-    motor:RotateForward("B")
-    motor:RotateForward("C")
-utility:DelayMilliseconds(2) // what number makes works here???
-    else  //then Normal Robot movement, Roll straight head
+   motor:RotateForward("B")
+   motor:RotateForward("C")
+ sound:PlayTone(1760, 50)
+    elseif distance = 0.1
     motor:SetSpeed("B",rightspeed)
     motor:SetSpeed("C",leftspeed)
     motor:RotateForward("B")
     motor:RotateForward("C")
-end 
-    //if ultrasonicSensor:GetDistance() = 0.3 then Normal Robot movement, Roll straight head
-    motor:SetSpeed("B",rightspeed)
-    motor:SetSpeed("C",leftspeed)
-    motor:RotateForward("B")
-    motor:RotateForward("C")
-
-end //End of repeat until touchSensor2:IsPressed() Upward Sensor
-motor:Stop("B")
-motor:Stop("C")
+    sound:PlayTone(440, 400)
+end
+end
 sound:PlayTone(220, 2000)
 //The End
 
