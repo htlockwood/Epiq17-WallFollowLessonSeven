@@ -1,5 +1,5 @@
 //Lesson 7 UltrasonicSensor 2017 Wall Follower
-//New solution robot 7/23/2017 EPIQ / help from Conni. Now works and cleaned up!
+//New solution robot 7/26/2017 EPIQ / help from Conni. Now works and cleaned up! Matches the Flowchart.
 use Libraries.Robots.Lego.Motor
 use Libraries.Robots.Lego.Button
 use Libraries.Robots.Lego.Utility
@@ -26,14 +26,15 @@ integer speed=16
 integer leftspeed=speed
 integer rightspeed=speed
 integer volume=16
+integer y=1 //this varible is using the change speed as needed to change the robot speed
 //output to screen 
-screen:OutputCenterLarge("WALL7 ", 1)
+screen:OutputCenterLarge("WALL8.2 ", 1)
     
 repeat until touchSensor:IsPressed() //wait till touchsensor is pressed
     sound:SetVolume(volume)     
     sound:PlayTone(440, 250)
     sound:PlayTone(660, 250) 
-    button:SetLightPattern(7)
+    button:SetLightPattern(1)
 end
 //delay after user presses center to let go of robot (3.5 seconds)
 screen:Clear()
@@ -52,24 +53,31 @@ repeat until touchSensor:IsPressed()//check if to touch sensor is pressed
     motor:SetSpeed("C",leftspeed)
     motor:RotateForward("B")
     motor:RotateForward("C")
-    if distance < 0.1  //have the robot turn left
-        motor:SetSpeed("B",rightspeed+1) 
-        motor:SetSpeed("C",leftspeed-2)
-        motor:RotateForward("B")
-        motor:RotateForward("C")
-        sound:PlayTone(110, 5)
-    elseif distance > 0.1 // have the robot move right.
-        motor:SetSpeed("B",rightspeed-1) 
-        motor:SetSpeed("C",leftspeed+1)
-        motor:RotateForward("B")
-        motor:RotateForward("C")
-        sound:PlayTone(1760, 5)
-    elseif distance = 0.1
+    
+    if distance = 0.2
+        button:SetLightPattern(1)
         motor:SetSpeed("B",rightspeed)
         motor:SetSpeed("C",leftspeed)
         motor:RotateForward("B")
         motor:RotateForward("C")
-        sound:PlayTone(440, 40)
+        sound:PlayTone(440, 500)
+
+    elseif distance > 0.2 // have the robot move right.
+        button:SetLightPattern(5)
+        motor:SetSpeed("B",rightspeed-y) 
+        motor:SetSpeed("C",leftspeed+y)
+        motor:RotateForward("B")
+        motor:RotateForward("C")
+        sound:PlayTone(1760, 8)
+
+    elseif distance < 0.2  //have the robot turn left
+        button:SetLightPattern(6)
+        motor:SetSpeed("B",rightspeed+y) 
+        motor:SetSpeed("C",leftspeed-y)
+        motor:RotateForward("B")
+        motor:RotateForward("C")
+        sound:PlayTone(110, 5)
+
     end
 end
 sound:PlayTone(220, 2000)
